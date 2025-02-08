@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Proposal</title>
+    <meta name="theme-color" content="rgb(255, 125, 147)">
+    <link rel="icon"
+        href="https://images.vexels.com/media/users/3/294729/isolated/preview/c873a2bc381b57447a355d10d6fd1eee-self-esteem-flower-cute-icon.png"
+        type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: rgb(255, 125, 147);
+            overflow: hidden;
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 2vw;
+            transition: transform 1s linear;
+        }
+
+        @media (max-width: 768px) {
+            .emoji {
+                font-size: 8vw;
+            }
+
+            h2 {
+                font-size: 6vw;
+            }
+
+            button {
+                font-size: 5vw;
+                padding: 3vw 6vw;
+            }
+        }
+
+        #proposalBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 2vw;
+            background: white;
+            border-radius: 10px;
+            z-index: 10;
+            width: 80%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        #noButton {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button {
+            font-size: 150%;
+            padding: 1vw 2vw;
+            border-radius: 10px;
+            background-color: white;
+            border-color: rgb(255, 85, 85);
+            border-width: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="proposalBox">
+        <h2>Will you be my Valentine?</h2>
+        <div class="gif-container">
+            <img id="Gif" src="https://static.wikia.nocookie.net/571b16ac-136f-42f4-99eb-173a75d4aa90" alt="GIF"
+                width="100%" style="max-width: 250px;">
+        </div>
+        <div class="button-container">
+            <button onclick="acceptProposal()">Yes</button>
+            <button id="noButton" onmouseover="moveNoButton()">No</button>
+        </div>
+    </div>
+    <script>
+        function acceptProposal() {
+            document.querySelector("#proposalBox h2").innerText = "Thank you! ❤️";
+            startConfetti(); // Start confetti animation
+            playSound(); // Plays the celebration sound
+            document.getElementById('Gif').src = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTIyeG14ZWEwYXIxamxjcjlvZjU1aDZkMXBlcnNiemxtbjZiZmZscyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/3oKIPwZVHEiM2B3ljq/giphy.gif";
+        }
+
+        function sendMSG() {
+            alert('Yipppiiee! Thank you!!!');
+        }
+
+        function moveNoButton() {
+            const noButton = document.getElementById('noButton');
+            const rect = noButton.getBoundingClientRect();
+            const maxX = window.innerWidth - rect.width - 20;
+            const maxY = window.innerHeight - rect.height - 20;
+            const x = Math.min(Math.max(800, rect.left + (Math.random() * 100 - 50)), maxX);
+            const y = Math.min(Math.max(800, rect.top + (Math.random() * 100 - 50)), maxY);
+            noButton.style.transform = `translate(${x - rect.left}px, ${y - rect.top}px)`;
+        }
+
+        //const x = Math.random() * maxX;
+        //const y = Math.random() * maxY;
+
+        function playSound() {
+            let audio = new Audio("song.mp3"); // Celebration sound
+            audio.currentTime = 39;
+            audio.play();
+        }
+
+        const emojis = ['❤️', '💖', '🥰', '😍', '💘', '💝', '💗'];
+        const maxEmojis = 200;
+        const emojiList = [];
+
+        function spawnEmoji() {
+            if (emojiList.length >= maxEmojis) return;
+
+            const emoji = document.createElement('div');
+            emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            emoji.className = 'emoji';
+            document.body.appendChild(emoji);
+
+            let x = Math.random() * window.innerWidth;
+            let y = Math.random() * window.innerHeight;
+            emoji.style.left = `${x}px`;
+            emoji.style.top = `${y}px`;
+
+            function animate() {
+                x += (Math.random() - 0.5) * 100;
+                y += (Math.random() - 0.5) * 100;
+                x = Math.max(0, Math.min(window.innerWidth - 30, x));
+                y = Math.max(0, Math.min(window.innerHeight - 30, y));
+                emoji.style.transform = `translate(${x}px, ${y}px)`;
+                requestAnimationFrame(animate);
+            }
+
+            requestAnimationFrame(animate);
+            emojiList.push(emoji);
+            setTimeout(() => {
+                emoji.remove();
+                emojiList.splice(emojiList.indexOf(emoji), 1);
+            }, 5000);
+        }
+
+        setInterval(spawnEmoji, 0);
+
+        // Confetti Effect
+        const confettiCanvas = document.createElement("canvas");
+        document.body.appendChild(confettiCanvas);
+        const ctx = confettiCanvas.getContext("2d");
+
+        confettiCanvas.style.position = "fixed";
+        confettiCanvas.style.top = "0";
+        confettiCanvas.style.left = "0";
+        confettiCanvas.style.pointerEvents = "none";
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        let confettiParticles = [];
+
+        function startConfetti() {
+            confettiParticles = [];
+            for (let i = 0; i < 100; i++) {
+                confettiParticles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 5 + 2,
+                    rotation: Math.random() * 360
+                });
+            }
+            requestAnimationFrame(updateConfetti);
+            setTimeout(() => (confettiParticles = []), 7000); // Clear after 7 seconds
+        }
+
+        function updateConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiParticles.forEach((p) => {
+                p.y += p.speedY;
+                p.rotation += 5;
+                ctx.save();
+                ctx.fillStyle = p.color;
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rotation * Math.PI) / 180);
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+            });
+            if (confettiParticles.length > 0) requestAnimationFrame(updateConfetti);
+        }
+
+        window.addEventListener("resize", () => {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+
+</html>
